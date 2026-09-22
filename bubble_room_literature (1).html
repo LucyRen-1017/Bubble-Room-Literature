@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bubble Room Literature | Underground Queer Press</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: EB Garamond & Courier Prime -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        birch: '#F5EFE6',
+                        paper: '#EFE8DC',
+                        walnut: '#3B2F2F',
+                        bark: '#2A221E',
+                        'pride-pink': '#F4C7D0',
+                        'pride-blue': '#B9E0EE',
+                        'pride-yellow': '#FDF1D6',
+                        'pride-purple': '#E3D3E9',
+                    },
+                    fontFamily: {
+                        serif: ['"EB Garamond"', 'Georgia', 'serif'],
+                        mono: ['"Courier Prime"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #F5EFE6;
+            color: #2A221E;
+            font-family: 'EB Garamond', Georgia, serif;
+            /* Wood Grain / Paper Texture Background */
+            background-image: radial-gradient(rgba(59, 47, 47, 0.04) 1px, transparent 0),
+                              linear-gradient(to right, rgba(59, 47, 47, 0.02) 1px, transparent 0);
+            background-size: 24px 24px, 120px 100%;
+        }
+
+        .dark body {
+            background-color: #1A1614;
+            color: #EFE8DC;
+            background-image: radial-gradient(rgba(239, 232, 220, 0.04) 1px, transparent 0);
+        }
+
+        /* Subtle Underground Rainbow Accent Bar */
+        .queer-ribbon {
+            height: 3px;
+            background: linear-gradient(
+                90deg, 
+                rgba(185,224,238,0.7) 0%, 
+                rgba(244,199,208,0.7) 20%, 
+                rgba(255,255,255,0.8) 40%, 
+                rgba(244,199,208,0.7) 60%, 
+                rgba(227,211,233,0.7) 80%,
+                rgba(253,241,214,0.7) 100%
+            );
+        }
+
+        .reader-theme-paper { background-color: #F5EFE6; color: #2A221E; }
+        .reader-theme-sepia { background-color: #EADECB; color: #32251D; }
+        .reader-theme-dark  { background-color: #151210; color: #E0D7CB; }
+
+        .wood-border { border-color: rgba(59, 47, 47, 0.2); }
+        .dark .wood-border { border-color: rgba(239, 232, 220, 0.15); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #8C7B6B; border-radius: 4px; }
+    </style>
+</head>
+<body class="transition-colors duration-300 min-h-screen flex flex-col antialiased selection:bg-pride-pink selection:text-bark">
+
+    <!-- Top Muted Rainbow Accent Strip -->
+    <div class="queer-ribbon w-full"></div>
+
+    <!-- Navigation Header -->
+    <header class="border-b wood-border bg-birch/90 dark:bg-bark/90 sticky top-0 z-40 backdrop-blur-sm">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded border border-walnut dark:border-paper/40 flex items-center justify-center font-serif italic text-lg font-bold bg-paper/50 dark:bg-bark">
+                    b
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-2xl font-semibold tracking-tight text-bark dark:text-paper">
+                        Bubble Room Literature
+                    </span>
+                    <span class="font-mono text-[10px] uppercase tracking-widest opacity-70">
+                        Underground Queer Prose & Poetry
+                    </span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 font-mono text-xs uppercase tracking-wider">
+                <a href="#issues" class="hover:text-amber-800 dark:hover:text-amber-200 transition-colors">Issues</a>
+                <a href="#submissions" class="hover:text-amber-800 dark:hover:text-amber-200 transition-colors">Submit</a>
+                <a href="#about" class="hover:text-amber-800 dark:hover:text-amber-200 transition-colors">Manifesto</a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <button id="saved-bookmarks-btn" class="p-2 text-bark dark:text-paper hover:text-amber-800 relative" title="Saved Pieces">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                    <span id="bookmark-count" class="hidden absolute top-0 right-0 w-3.5 h-3.5 bg-walnut text-birch text-[9px] font-mono font-bold rounded-full flex items-center justify-center">0</span>
+                </button>
+
+                <button id="theme-toggle" class="p-2 text-bark dark:text-paper hover:text-amber-800" title="Toggle Theme">
+                    <i data-lucide="moon" class="w-4 h-4 dark:hidden"></i>
+                    <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+                </button>
+
+                <a href="#submissions" class="hidden sm:inline-flex px-3 py-1.5 font-mono text-xs uppercase tracking-wider rounded border border-walnut dark:border-paper/60 text-bark dark:text-paper hover:bg-walnut hover:text-birch dark:hover:bg-paper dark:hover:text-bark transition-all">
+                    Submit Doc
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-6 py-10 md:py-16 space-y-20">
+
+        <!-- Banner / Hero -->
+        <section class="max-w-3xl space-y-6">
+            <div class="inline-block px-2 py-1 bg-paper dark:bg-bark border wood-border font-mono text-[11px] uppercase tracking-widest">
+                Year-Round Literary Journal
+            </div>
+
+            <h1 class="font-serif text-4xl sm:text-6xl font-normal leading-tight text-bark dark:text-paper">
+                An underground haven for honest queer literature.
+            </h1>
+
+            <p class="font-serif text-xl text-bark/80 dark:text-paper/80 leading-relaxed italic">
+                We publish poetry, prose, and hybrid experimental work on a rolling basis. Sequential issues assemble as work flows in naturally.
+            </p>
+
+            <div class="pt-2 flex flex-wrap gap-4 font-mono text-xs uppercase tracking-wider">
+                <a href="#issues" class="px-5 py-2.5 bg-walnut text-birch dark:bg-paper dark:text-bark hover:opacity-90 transition-opacity">
+                    Read Current Issue
+                </a>
+                <a href="#submissions" class="px-5 py-2.5 border wood-border hover:bg-paper dark:hover:bg-bark transition-colors">
+                    Submission Portal
+                </a>
+            </div>
+        </section>
+
+        <!-- Issues Archive -->
+        <section id="issues" class="space-y-8">
+            <div class="border-b wood-border pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h2 class="font-serif text-3xl font-normal">Issues Catalog</h2>
+                    <p class="font-serif italic text-sm opacity-75">Select an issue to read works from our writers.</p>
+                </div>
+
+                <!-- Sequential Issue Tabs -->
+                <div class="flex items-center gap-2 font-mono text-xs uppercase" id="issue-tabs">
+                    <button onclick="switchIssue(3)" id="tab-issue-3" class="issue-tab px-3 py-1.5 border-b-2 border-walnut dark:border-paper font-bold">
+                        Issue 3 <span class="text-[10px] font-normal lowercase">(Current)</span>
+                    </button>
+                    <button onclick="switchIssue(2)" id="tab-issue-2" class="issue-tab px-3 py-1.5 border-b-2 border-transparent opacity-60 hover:opacity-100">
+                        Issue 2
+                    </button>
+                    <button onclick="switchIssue(1)" id="tab-issue-1" class="issue-tab px-3 py-1.5 border-b-2 border-transparent opacity-60 hover:opacity-100">
+                        Issue 1
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filter Categories -->
+            <div class="flex items-center gap-4 font-mono text-xs opacity-80" id="category-filters">
+                <button data-filter="all" class="filter-btn font-bold underline">All Works</button>
+                <button data-filter="poetry" class="filter-btn hover:underline">Poetry</button>
+                <button data-filter="prose" class="filter-btn hover:underline">Prose</button>
+                <button data-filter="essay" class="filter-btn hover:underline">Hybrids</button>
+            </div>
+
+            <!-- List of Works -->
+            <div id="works-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Injected via JavaScript -->
+            </div>
+        </section>
+
+        <!-- Submission Section -->
+        <section id="submissions" class="border-t wood-border pt-14 space-y-8">
+            <div class="max-w-2xl space-y-3">
+                <span class="font-mono text-xs uppercase tracking-widest text-amber-800 dark:text-amber-200 font-bold">Direct Submissions</span>
+                <h2 class="font-serif text-3xl font-normal">How to Submit Your Work</h2>
+                <p class="font-serif text-lg leading-relaxed italic opacity-80">
+                    We accept works year-round without fee or deadline. Please read our guidelines before emailing us.
+                </p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-6 font-serif text-base">
+                <div class="p-5 bg-paper/60 dark:bg-bark/60 border wood-border space-y-2">
+                    <h3 class="font-mono text-xs uppercase tracking-wider font-bold">Poetry</h3>
+                    <p class="text-sm opacity-90">Send <strong>up to 6 poems</strong> in a single file. Experimental, free-verse, or formal forms are all welcome.</p>
+                </div>
+                <div class="p-5 bg-paper/60 dark:bg-bark/60 border wood-border space-y-2">
+                    <h3 class="font-mono text-xs uppercase tracking-wider font-bold">Prose & Essays</h3>
+                    <p class="text-sm opacity-90">Short fiction, flash prose, or personal hybrid essays up to 3,500 words per submission.</p>
+                </div>
+            </div>
+
+            <!-- Submission Instructions Box -->
+            <div class="p-6 bg-paper dark:bg-bark/90 border-2 border-walnut dark:border-paper/40 space-y-4">
+                <h3 class="font-mono text-sm uppercase tracking-wider font-bold flex items-center gap-2">
+                    <i data-lucide="paperclip" class="w-4 h-4"></i> Single-Document Submission Protocol
+                </h3>
+                <p class="font-serif text-base leading-relaxed">
+                    Please bundle <strong>all writing pieces AND your personal bio/info into ONE single Word document (.doc / .docx) or PDF</strong> file. 
+                </p>
+                <div class="font-mono text-xs space-y-1 bg-birch dark:bg-black/30 p-3 rounded border wood-border">
+                    <p>• Include: Name or Pseudonym, Contact Email, Piece Title(s), Text, and Bio.</p>
+                    <p>• Pseudonyms / Pen Names are 100% welcomed for safety and privacy.</p>
+                    <p>• Subject Line Format: <code>[Genre] - [Title / Poems] - [Your Name]</code></p>
+                </div>
+
+                <div class="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <a href="mailto:bubbleroomlove@outlook.com" class="px-5 py-2.5 bg-walnut text-birch dark:bg-paper dark:text-bark font-mono text-xs uppercase tracking-wider flex items-center gap-2 hover:opacity-90">
+                        <i data-lucide="mail" class="w-4 h-4"></i> Send to bubbleroomlove@outlook.com
+                    </a>
+                    <span class="font-mono text-xs text-slate-500">No submission fees. Always rolling.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manifesto / About -->
+        <section id="about" class="border-t wood-border pt-14 grid md:grid-cols-12 gap-8 items-start">
+            <div class="md:col-span-4 space-y-2">
+                <span class="font-mono text-xs uppercase tracking-widest text-amber-800 dark:text-amber-200">About the Journal</span>
+                <h2 class="font-serif text-3xl font-normal">Our Manifesto</h2>
+            </div>
+            <div class="md:col-span-8 font-serif text-lg leading-relaxed space-y-4 opacity-90">
+                <p>
+                    <em>Bubble Room Literature</em> is an independent, underground sanctuary dedicated to publishing authentic queer writers, poets, and storytellers. 
+                </p>
+                <p>
+                    We value quiet vulnerability, wild experimentation, and raw honesty over sanitized academic standards. We operate as a continuous rolling press, curating works into cohesive issues as they bloom.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Reader Modal -->
+    <div id="reader-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm">
+        <div id="reader-container" class="reader-theme-paper w-full h-full sm:h-[90vh] sm:max-w-3xl rounded shadow-2xl flex flex-col overflow-hidden border wood-border">
+            
+            <div class="px-6 py-3 border-b wood-border flex items-center justify-between shrink-0 font-mono text-xs">
+                <div class="flex items-center gap-2">
+                    <span id="modal-issue" class="font-bold">Issue 3</span>
+                    <span>•</span>
+                    <span id="modal-category" class="opacity-70">Poetry</span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center bg-black/5 dark:bg-white/10 rounded">
+                        <button onclick="setReaderTheme('paper')" class="px-2 py-1">Paper</button>
+                        <button onclick="setReaderTheme('sepia')" class="px-2 py-1">Sepia</button>
+                        <button onclick="setReaderTheme('dark')" class="px-2 py-1">Dark</button>
+                    </div>
+
+                    <button onclick="closeReaderModal()" class="p-1 hover:text-amber-800">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto px-6 sm:px-16 py-10 max-w-2xl mx-auto w-full">
+                <div class="text-center mb-8 space-y-2">
+                    <h1 id="modal-title" class="font-serif text-3xl sm:text-5xl font-normal leading-snug">
+                        Title
+                    </h1>
+                    <p id="modal-author" class="font-serif italic text-base sm:text-lg opacity-80">
+                        By Author
+                    </p>
+                </div>
+
+                <div id="modal-body-text" class="font-serif leading-relaxed text-lg sm:text-xl space-y-6 whitespace-pre-line">
+                    <!-- Text body -->
+                </div>
+
+                <div class="mt-14 pt-6 border-t wood-border font-serif text-sm opacity-80">
+                    <p class="font-bold font-mono text-xs uppercase tracking-wider mb-1" id="author-bio-title">About the Writer</p>
+                    <p id="author-bio-text" class="italic leading-relaxed">
+                        Bio details...
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-6 py-3 border-t wood-border flex items-center justify-between font-mono text-xs">
+                <span id="modal-tags" class="opacity-60">#QueerJoy</span>
+                <button id="modal-bookmark-btn" onclick="toggleModalBookmark()" class="flex items-center gap-1 hover:text-amber-800">
+                    <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
+                    <span>Save Piece</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saved Bookmarks Modal -->
+    <div id="bookmarks-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-birch dark:bg-bark w-full max-w-md rounded p-6 border wood-border shadow-2xl">
+            <div class="flex items-center justify-between mb-4 border-b wood-border pb-3">
+                <h3 class="font-serif text-xl font-normal">Saved Reading List</h3>
+                <button onclick="closeBookmarksModal()">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <div id="bookmarks-list" class="space-y-3 font-serif">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-walnut text-birch px-4 py-3 rounded shadow-lg font-mono text-xs flex items-center gap-2">
+        <i data-lucide="check" class="w-4 h-4"></i>
+        <span id="toast-message">Action saved</span>
+    </div>
+
+    <footer class="border-t wood-border py-10 mt-16 bg-paper/40 dark:bg-bark/40 font-serif text-xs">
+        <div class="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4 opacity-80">
+            <div class="space-y-1">
+                <p class="font-bold text-sm">Bubble Room Literature</p>
+                <p class="italic">bubbleroomlove@outlook.com</p>
+            </div>
+            <div class="font-mono text-[11px] uppercase tracking-widest flex gap-4">
+                <a href="#issues" class="hover:underline">Issues</a>
+                <a href="#submissions" class="hover:underline">Submit Doc</a>
+                <a href="#about" class="hover:underline">Manifesto</a>
+            </div>
+            <p>&copy; All rights remain with individual authors.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Database of Works (Issue 1, 2, 3)
+        const worksDatabase = [
+            {
+                id: 101,
+                issue: 3,
+                title: "How to Soften a Stone in Warm Lavender Water",
+                author: "Maya Lin-Soto",
+                category: "poetry",
+                categoryLabel: "Poetry",
+                excerpt: "We learned to speak in quiet frequencies, under sheets that smelled like cedar and morning rain. If you hold your breath long enough, even the hardest memory turns into glass...",
+                content: `We learned to speak in quiet frequencies,
+under sheets that smelled like cedar and morning rain.
+
+If you hold your breath long enough,
+even the hardest memory turns into glass
+you can look through without burning.
+
+I asked you once if the sun felt heavy on your shoulders
+and you showed me three copper coins found at the bottom of the bay.
+"Everything that sinks," you whispered,
+"is just waiting for someone to learn how to dive."`,
+                tags: ["#Memory", "#Tenderness"],
+                authorBio: "Maya Lin-Soto is a queer poet from San Jose focusing on botanical imagery and sanctuary spaces."
+            },
+            {
+                id: 102,
+                issue: 3,
+                title: "The Diner on 4th Street",
+                author: "Ezra Thorne",
+                category: "prose",
+                categoryLabel: "Prose",
+                excerpt: "We spent four hours designing a city where nobody had to explain why their voice shook when they said their own name...",
+                content: `The diner on 4th street smelled like burnt espresso and lavender syrup. We spent four hours designing a city where nobody had to explain why their voice shook when they said their own name.
+
+Ezra drew blueprints on paper napkins. Bridges made of woven wisteria, houses with roofs made of blown glass so you could watch the midnight stars while falling asleep.
+
+"What about the winters?" I asked, tracing the blue ink on his thumb.
+
+"In this city," Ezra said, without looking up, "winter only lasts as long as a cup of warm tea. And everyone gets two scarves."`,
+                tags: ["#FoundFamily", "#Prose"],
+                authorBio: "Ezra Thorne is a fiction writer studying in Chicago."
+            },
+            {
+                id: 103,
+                issue: 3,
+                title: "A Small Glossary for Queer Survival",
+                author: "Soren Patel",
+                category: "essay",
+                categoryLabel: "Hybrid Essay",
+                excerpt: "1. Bloom: To emerge into sunlight even when the weather forecast insists on winter. 2. Sanctuary: Any room where you don't have to shrink yourself...",
+                content: `1. Bloom
+To emerge into sunlight even when the weather forecast insists on eternal winter.
+
+2. Sanctuary
+Any room where you don't have to shrink your posture to fit inside the doorframe. A kitchen at 2:00 AM where three people are laughing over lukewarm soup.
+
+3. Transmute
+The art of taking inherited grief and turning it into something bright enough to light the hallway for whoever comes behind you.`,
+                tags: ["#Language", "#QueerIdentity"],
+                authorBio: "Soren Patel writes essays exploring language and trans liberation."
+            },
+            {
+                id: 201,
+                issue: 2,
+                title: "Symphony for Two Saltwater Fish",
+                author: "Leo Vance",
+                category: "poetry",
+                categoryLabel: "Poetry",
+                excerpt: "We swim in the light between tide lines. Tell me again how the water holds us without asking for proof of our names...",
+                content: `We swim in the light between tide lines.
+Tell me again how the water holds us
+without asking for proof of our names.
+
+Underneath the pier, the barnacles shimmer
+like small constellations forgotten by the sky.`,
+                tags: ["#Water", "#Poetry"],
+                authorBio: "Leo Vance is a writer and organizer."
+            },
+            {
+                id: 301,
+                issue: 1,
+                title: "Notes on Transfiguration in the Kitchen",
+                author: "Rowan Vance",
+                category: "essay",
+                categoryLabel: "Personal Essay",
+                excerpt: "Cooking for the people you love is a form of prayer. Chopping garlic, kneading dough, listening to the rain tap against the windowpane...",
+                content: `Cooking for the people you love is a form of prayer.
+
+Chopping garlic, kneading sourdough, listening to the rain tap against the kitchen windowpane.
+
+When we sit down at the wooden table, surrounded by thrifted mismatched plates, I realize that queer joy is built out of these quiet, domestic rituals of care.`,
+                tags: ["#Nourishment", "#QueerJoy"],
+                authorBio: "Rowan Vance is a food writer and community gardener."
+            }
+        ];
+
+        let selectedIssue = 3;
+        let selectedCategory = 'all';
+        let bookmarks = JSON.parse(localStorage.getItem('bubbleroom_saved') || '[]');
+        let currentModalId = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderWorksList();
+            updateBookmarkBadge();
+            setupThemeToggle();
+            setupCategoryFilters();
+        });
+
+        function switchIssue(issueNum) {
+            selectedIssue = issueNum;
+            document.querySelectorAll('.issue-tab').forEach(tab => {
+                tab.classList.remove('border-walnut', 'dark:border-paper', 'font-bold');
+                tab.classList.add('border-transparent', 'opacity-60');
+            });
+
+            const activeTab = document.getElementById(`tab-issue-${issueNum}`);
+            if (activeTab) {
+                activeTab.classList.remove('border-transparent', 'opacity-60');
+                activeTab.classList.add('border-walnut', 'dark:border-paper', 'font-bold');
+            }
+
+            renderWorksList();
+        }
+
+        function setupCategoryFilters() {
+            document.querySelectorAll('#category-filters .filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#category-filters .filter-btn').forEach(b => {
+                        b.classList.remove('font-bold', 'underline');
+                    });
+                    btn.classList.add('font-bold', 'underline');
+                    selectedCategory = btn.getAttribute('data-filter');
+                    renderWorksList();
+                });
+            });
+        }
+
+        function renderWorksList() {
+            const container = document.getElementById('works-list');
+            container.innerHTML = '';
+
+            const filtered = worksDatabase.filter(item => {
+                const matchIssue = item.issue === selectedIssue;
+                const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
+                return matchIssue && matchCat;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="font-serif italic text-sm opacity-60 col-span-2 py-6">No works found in this category for Issue ${selectedIssue}.</p>`;
+                return;
+            }
+
+            filtered.forEach(work => {
+                const isSaved = bookmarks.includes(work.id);
+                const el = document.createElement('div');
+                el.className = 'p-5 bg-paper/60 dark:bg-bark/50 border wood-border flex flex-col justify-between space-y-3 hover:border-walnut transition-colors';
+
+                el.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between font-mono text-[10px] uppercase tracking-wider opacity-75">
+                            <span>Issue ${work.issue} • ${work.categoryLabel}</span>
+                            <button onclick="toggleBookmark(${work.id})" class="hover:text-amber-800">
+                                <i data-lucide="bookmark" class="w-3.5 h-3.5 ${isSaved ? 'fill-walnut text-walnut dark:fill-paper dark:text-paper' : ''}"></i>
+                            </button>
+                        </div>
+                        <h3 onclick="openReaderModal(${work.id})" class="font-serif text-2xl font-normal hover:underline cursor-pointer leading-tight">
+                            "${work.title}"
+                        </h3>
+                        <p class="font-serif italic text-xs opacity-80">By ${work.author}</p>
+                        <p class="font-serif italic text-sm opacity-90 line-clamp-3 leading-relaxed">
+                            "${work.excerpt}"
+                        </p>
+                    </div>
+
+                    <div class="pt-3 border-t wood-border flex items-center justify-between font-mono text-[11px]">
+                        <div class="flex gap-2 opacity-60">
+                            ${work.tags.map(t => `<span>${t}</span>`).join('')}
+                        </div>
+                        <button onclick="openReaderModal(${work.id})" class="font-bold hover:underline">
+                            Read Piece &rarr;
+                        </button>
+                    </div>
+                `;
+
+                container.appendChild(el);
+            });
+
+            lucide.createIcons();
+        }
+
+        function openReaderModal(id) {
+            const work = worksDatabase.find(w => w.id === id);
+            if (!work) return;
+
+            currentModalId = id;
+            document.getElementById('modal-issue').innerText = `Issue ${work.issue}`;
+            document.getElementById('modal-category').innerText = work.categoryLabel;
+            document.getElementById('modal-title').innerText = work.title;
+            document.getElementById('modal-author').innerText = `By ${work.author}`;
+            document.getElementById('modal-body-text').innerHTML = work.content;
+            document.getElementById('author-bio-title').innerText = `About ${work.author}`;
+            document.getElementById('author-bio-text').innerText = work.authorBio;
+            document.getElementById('modal-tags').innerText = work.tags.join(' ');
+
+            updateModalBookmarkState();
+            document.getElementById('reader-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeReaderModal() {
+            document.getElementById('reader-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function setReaderTheme(theme) {
+            const container = document.getElementById('reader-container');
+            container.classList.remove('reader-theme-paper', 'reader-theme-sepia', 'reader-theme-dark');
+            container.classList.add(`reader-theme-${theme}`);
+        }
+
+        function toggleBookmark(id) {
+            const idx = bookmarks.indexOf(id);
+            if (idx > -1) {
+                bookmarks.splice(idx, 1);
+                showToast("Removed from saved list");
+            } else {
+                bookmarks.push(id);
+                showToast("Saved to reading list");
+            }
+
+            localStorage.setItem('bubbleroom_saved', JSON.stringify(bookmarks));
+            updateBookmarkBadge();
+            renderWorksList();
+            if (currentModalId === id) updateModalBookmarkState();
+        }
+
+        function toggleModalBookmark() {
+            if (currentModalId) toggleBookmark(currentModalId);
+        }
+
+        function updateModalBookmarkState() {
+            const isSaved = bookmarks.includes(currentModalId);
+            const btn = document.getElementById('modal-bookmark-btn');
+            btn.querySelector('span').innerText = isSaved ? "Saved" : "Save Piece";
+        }
+
+        function updateBookmarkBadge() {
+            const badge = document.getElementById('bookmark-count');
+            if (bookmarks.length > 0) {
+                badge.innerText = bookmarks.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('saved-bookmarks-btn').addEventListener('click', () => {
+            const list = document.getElementById('bookmarks-list');
+            list.innerHTML = '';
+
+            if (bookmarks.length === 0) {
+                list.innerHTML = `<p class="italic opacity-60 text-sm">No saved pieces yet.</p>`;
+            } else {
+                bookmarks.forEach(id => {
+                    const work = worksDatabase.find(w => w.id === id);
+                    if (work) {
+                        const item = document.createElement('div');
+                        item.className = 'flex justify-between items-center py-2 border-b wood-border';
+                        item.innerHTML = `
+                            <div>
+                                <h4 onclick="closeBookmarksModal(); openReaderModal(${work.id})" class="text-base hover:underline cursor-pointer">"${work.title}"</h4>
+                                <p class="text-xs opacity-70 italic">By ${work.author}</p>
+                            </div>
+                            <button onclick="toggleBookmark(${work.id})">
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+                        `;
+                        list.appendChild(item);
+                    }
+                });
+            }
+
+            document.getElementById('bookmarks-modal').classList.remove('hidden');
+            lucide.createIcons();
+        });
+
+        function closeBookmarksModal() {
+            document.getElementById('bookmarks-modal').classList.add('hidden');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        function setupThemeToggle() {
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+            });
+        }
+    </script>
+</body>
+</html>
